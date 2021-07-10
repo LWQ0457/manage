@@ -18,35 +18,40 @@ public class ResultBody {
         this.msg = msg;
         this.data = data;
     }
-    public static ResultBody getResult(Object data){
+
+    public static ResultBody getResult(Object data) {
         ResultBody resultBody;
-        if(data==null){
-            resultBody=noFind();
-        }
-        else{
-            resultBody=success(data);
+        if (data == null) {
+            resultBody = noFind();
+        } else {
+            resultBody = success(data);
         }
         return resultBody;
     }
-    public static ResultBody success(Object data){
+
+    public static ResultBody success(Object data) {
         return new ResultBody(ResultEnum.SUCCESS.getCode(),
-                ResultEnum.SUCCESS.getMsg(),data);
+                ResultEnum.SUCCESS.getMsg(), data);
     }
-    public static ResultBody noFind(){
+
+    public static ResultBody noFind() {
         return new ResultBody(ResultEnum.NOT_FOUND.getCode(),
-                ResultEnum.NOT_FOUND.getMsg(),null);
+                ResultEnum.NOT_FOUND.getMsg(), null);
     }
-    public static ResultBody server_busy(Object data){
+
+    public static ResultBody server_busy(Object data) {
         return new ResultBody(ResultEnum.SERVER_BUSY.getCode(),
-                ResultEnum.SERVER_BUSY.getMsg(),data);
+                ResultEnum.SERVER_BUSY.getMsg(), data);
     }
-    public static ResultBody error(BaseResultInfoInterface errorInfo){
+
+    public static ResultBody error(BaseResultInfoInterface errorInfo) {
         return new ResultBody(errorInfo.getCode(),
-                errorInfo.getMsg(),null);
+                errorInfo.getMsg(), null);
     }
-    public static ResultBody error(String code ,String msg){
+
+    public static ResultBody error(String code, String msg) {
         return new ResultBody(code,
-                msg,null);
+                msg, null);
     }
 
     public String getCode() {

@@ -1,7 +1,8 @@
 package com.liuwq.hdfs.manage.pojo;
 
 public interface BaseResultInfoInterface {
-     String getCode();
-     String getMsg();
+    String getCode();
+
+    String getMsg();
 
 }
