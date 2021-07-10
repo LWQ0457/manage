@@ -12,12 +12,12 @@ public class FileFactory {
     }
     public static ArrayList<HdfsFile> directoryFormat(FileStatus[] directory){
         ArrayList<HdfsFile> hdfsFiles=new ArrayList<>();
-        for (int i = 0; i < directory.length; i++) {
-            hdfsFiles.add(fileFormat(directory[i]));
+        for (FileStatus fileStatus:directory) {
+            hdfsFiles.add(fileFormat(fileStatus));
         }
         return hdfsFiles;
     }
-    public static Object format(FileStatus[] fileStatuses){
+    public static ArrayList<HdfsFile> format(FileStatus[] fileStatuses){
         if (fileStatuses.length==0){
             return null;
         }
