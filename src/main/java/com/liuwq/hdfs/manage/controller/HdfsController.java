@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
 public class HdfsController {
@@ -34,8 +33,10 @@ public class HdfsController {
     @PostMapping("/upload")
     public ResultBody upload(@RequestParam("path") String path,
                              @RequestPart("file") MultipartFile file) throws Exception {
-        hdfsService.uploadFile(path + file.getOriginalFilename(), file.getInputStream());
-        return ResultBody.success(null);
+        if (hdfsService.uploadFile(path + file.getOriginalFilename(), file.getInputStream())) {
+            return ResultBody.success(null);
+        }
+        return ResultBody.error("-1", "目标路径下存在同名文件");
     }
 
     @GetMapping("/download")
@@ -49,24 +50,48 @@ public class HdfsController {
         response.addHeader("Content-Length", "" + (hdfsService.getFileInfoByPath(path)).get(0).getSize());
         response.setContentType("application/octet-stream;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
-        hdfsService.downloadFile(path, outputStream);
-        return ResultBody.success(null);
+        if (hdfsService.downloadFile(path, outputStream)) {
+            return ResultBody.success(null);
+        }
+        return ResultBody.error_noFind();
     }
 
     @GetMapping("/delete")
     public ResultBody deleteFile(@RequestParam("path") String path) throws Exception {
-        hdfsService.deleteFile(path);
-        return ResultBody.success(null);
+        if (hdfsService.deleteFile(path)) {
+            return ResultBody.success(null);
+        } else {
+            return ResultBody.error_noFind();
+        }
     }
 
     @GetMapping("add")
     public ResultBody addFile(@RequestParam("path") String path) throws Exception {
-        hdfsService.creatNewFile(path);
-        return ResultBody.success(null);
+        if (hdfsService.creatNewFile(path))
+            return ResultBody.success(null);
+        else {
+            return ResultBody.error_noFind();
+        }
     }
 
     @GetMapping("getSize")
-    public ResultBody getDirSize(@RequestParam("path") String path) throws IOException {
-        return ResultBody.success(hdfsService.getDirSize(path));
+    public ResultBody getDirSize(@RequestParam("path") String path) throws Exception {
+        long size;
+        if ((size = hdfsService.getDirSize(path)) > -1)
+            return ResultBody.success(size);
+        else {
+            return ResultBody.error_noFind();
+        }
+    }
+
+    @GetMapping(value = {"rename", "move"})
+    public ResultBody renameFile(@RequestParam("srcPath") String srcPath,
+                                 @RequestParam("desPath") String desPath) throws Exception {
+        if (hdfsService.renameFile(srcPath, desPath)) {
+            return ResultBody.success(null);
+
+        } else {
+            return ResultBody.error("-1", "目标路径下存在同名文件");
+        }
     }
 }

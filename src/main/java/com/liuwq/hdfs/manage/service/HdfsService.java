@@ -1,6 +1,7 @@
 package com.liuwq.hdfs.manage.service;
 
 import com.liuwq.hdfs.manage.pojo.HdfsFile;
+import org.apache.hadoop.fs.Path;
 
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
@@ -18,5 +19,8 @@ public interface HdfsService {
 
     boolean creatNewFile(String path) throws Exception;
 
-    long getDirSize(String path) throws IOException;
+    long getDirSize(String path) throws Exception;
+
+    boolean renameFile(String oldPath,String newPath) throws Exception;
+    boolean exist(Path path) throws IOException;
 }

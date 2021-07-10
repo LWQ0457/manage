@@ -19,6 +19,22 @@ public class HdfsServiceImpl implements HdfsService {
     HdfsManager hdfsManager;
     @Autowired
     FileFormat fileFormat;
+    private Path filePath;
+    private Path filePath2;
+    @Override
+    public boolean renameFile(String oldPath,String newPath) throws Exception {
+        filePath=pathFormat(oldPath);
+        filePath2=pathFormat(newPath);
+        if(!exist(filePath)||exist(filePath2)){
+            return false;
+        }
+        return hdfsManager.rename(pathFormat(oldPath),pathFormat(newPath));
+    }
+
+    @Override
+    public boolean exist(Path path) throws IOException {
+        return hdfsManager.exist(path);
+    }
 
     @Override
     public ArrayList<HdfsFile> getFileInfoByPath(String path) throws Exception {
@@ -27,28 +43,48 @@ public class HdfsServiceImpl implements HdfsService {
 
     @Override
     public boolean downloadFile(String path, ServletOutputStream outputStream) throws Exception {
-        IOUtils.copyBytes(hdfsManager.open(pathFormat(path)), outputStream, 4096, true);
+        filePath=pathFormat(path);
+        if (!exist(filePath)){
+            return false;
+        }
+        IOUtils.copyBytes(hdfsManager.open(filePath), outputStream, 4096, true);
         return true;
     }
 
     @Override
     public boolean uploadFile(String path, InputStream inputStream) throws Exception {
+        filePath=pathFormat(path);
+        if (exist(filePath)){
+            return false;
+        }
         IOUtils.copyBytes(inputStream, hdfsManager.save(pathFormat(path)), 4096, true);
         return true;
     }
 
     @Override
     public boolean deleteFile(String path) throws Exception {
+        filePath=pathFormat(path);
+        if (!exist(filePath)){
+            return false;
+        }
         return hdfsManager.delete(pathFormat(path));
     }
 
     @Override
     public boolean creatNewFile(String path) throws Exception {
+        filePath=pathFormat(path);
+        if (exist(filePath)){
+            return false;
+        }
         return hdfsManager.create(pathFormat(path));
     }
 
     @Override
     public long getDirSize(String path) throws IOException {
+        filePath=pathFormat(path);
+        if (!exist(filePath)){
+            return -1;
+        }
         return hdfsManager.getFileSize(pathFormat(path));
     }
 

@@ -18,7 +18,6 @@ public interface HdfsManager {
 
     Boolean rename(Path oldPath, Path newPath) throws IOException;
 
-    Boolean move();
 
     Boolean create(Path path) throws IOException;
 

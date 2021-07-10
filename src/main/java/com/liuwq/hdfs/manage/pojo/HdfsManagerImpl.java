@@ -40,12 +40,6 @@ public class HdfsManagerImpl implements HdfsManager {
     }
 
     @Override
-    public Boolean move() {
-
-        return true;
-    }
-
-    @Override
     public Boolean create(Path path) throws IOException {
         return hdfs.getFileSystem().createNewFile(path);
     }
