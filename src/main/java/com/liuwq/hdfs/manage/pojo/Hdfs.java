@@ -3,6 +3,7 @@ package com.liuwq.hdfs.manage.pojo;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 
+import java.io.IOException;
 import java.net.URI;
 public class Hdfs {
     private final String uri;
@@ -53,5 +54,8 @@ public class Hdfs {
     }
     public FSDataInputStream open(Path path)throws Exception{
         return fileSystem.open(path);
+    }
+    public long getFileSize(Path path) throws IOException {
+        return fileSystem.getUsed(path);
     }
 }

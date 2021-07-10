@@ -9,14 +9,15 @@ import org.apache.hadoop.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
@@ -36,30 +37,41 @@ public class HdfsController {
         ResultBody resultBody;
         Object data;
         data = hdfsService.getFileInfoByPath(path);
-        resultBody = ResultBody.getResult(data);
-        return resultBody;
+        return ResultBody.success(data);
     }
 
-    @GetMapping("/upload")
-    public ResultBody upload() {
-        return null;
+    @PostMapping("/upload")
+    public ResultBody upload(@RequestParam("path") String path,
+                             @RequestPart("file") MultipartFile file) throws Exception{
+        hdfsService.uploadFile(path+file.getOriginalFilename(),file.getInputStream());
+        return ResultBody.success(null);
     }
     @GetMapping("/download")
-    public void download(@RequestParam("path") String path,
+    public ResultBody download(@RequestParam("path") String path,
                                  HttpServletResponse response)throws Exception{
-        String fileName=path;
-        if(path.charAt(0)=='/'){
-            fileName=path.substring(1);
-        }
-        else{
+        if(path.charAt(0)!='/'){
             path='/'+path;
         }
         response.reset();
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + path.substring(1) + "\"");
         response.addHeader("Content-Length", "" + (hdfsService.getFileInfoByPath(path)).get(0).getSize());
         response.setContentType("application/octet-stream;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();
-        IOUtils.copyBytes(hdfsService.download(path,response),outputStream,4096,true);
-
+        hdfsService.downloadFile(path,outputStream);
+        return ResultBody.success(null);
+    }
+    @GetMapping("/delete")
+    public ResultBody deleteFile(@RequestParam("path") String path) throws Exception {
+        hdfsService.deleteFile(path);
+        return ResultBody.success(null);
+    }
+    @GetMapping("add")
+    public ResultBody addFile(@RequestParam("path") String path) throws Exception {
+        hdfsService.creatNewFile(path);
+        return ResultBody.success(null);
+    }
+    @GetMapping("getSize")
+    public ResultBody getDirSize(@RequestParam("path") String path) throws IOException {
+        return ResultBody.success(hdfsService.getDirSize(path));
     }
 }
