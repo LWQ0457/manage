@@ -11,7 +11,6 @@ public class MyConfig {
     private String uri;
     @Bean
     public Hdfs hdfs() throws Exception{
-
         return new Hdfs(uri);
     }
 

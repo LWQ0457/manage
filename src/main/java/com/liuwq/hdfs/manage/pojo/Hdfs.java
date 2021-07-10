@@ -1,7 +1,10 @@
 package com.liuwq.hdfs.manage.pojo;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.tomcat.jni.File;
 
 import java.net.URI;
 
@@ -27,6 +30,12 @@ public class Hdfs {
     public FileSystem getFileSystem() {
         return fileSystem;
     }
-
-
+    public FileStatus[] getFileByPath(Path path) throws Exception{
+        return fileSystem.listStatus(path);
+    }
+    public void save(){
+    }
+    public Boolean exist(Path path) throws Exception{
+        return fileSystem.exists(path);
+    }
 }

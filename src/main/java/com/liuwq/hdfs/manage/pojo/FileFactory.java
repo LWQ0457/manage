@@ -6,23 +6,24 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class FileFactory {
-    public static HdfsFile fileFomater(FileStatus fileStatus){
+    public static HdfsFile fileFormat(FileStatus fileStatus){
         return new HdfsFile(fileStatus.isDirectory(),fileStatus.getPermission().toString(),fileStatus.getOwner(),
                 new Date(fileStatus.getModificationTime()),fileStatus.getLen(),fileStatus.getPath().toString());
     }
-    public static ArrayList<HdfsFile> directoryFomater(FileStatus[] directory){
+    public static ArrayList<HdfsFile> directoryFormat(FileStatus[] directory){
         ArrayList<HdfsFile> hdfsFiles=new ArrayList<>();
         for (int i = 0; i < directory.length; i++) {
-            hdfsFiles.add(FileFactory.fileFomater(directory[i]));
+            hdfsFiles.add(fileFormat(directory[i]));
         }
         return hdfsFiles;
     }
-    public static Object fomater(FileStatus[] fileStatuses){
+    public static Object format(FileStatus[] fileStatuses){
         if (fileStatuses.length==0){
             return null;
         }
         else{
-            return directoryFomater(fileStatuses);
+            return directoryFormat(fileStatuses);
         }
     }
+
 }
