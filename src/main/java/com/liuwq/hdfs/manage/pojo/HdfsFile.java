@@ -2,7 +2,6 @@ package com.liuwq.hdfs.manage.pojo;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class HdfsFile {
@@ -12,14 +11,15 @@ public class HdfsFile {
     private String time;
     private Long size;
     private String path;
+
     public HdfsFile() {
     }
 
-    public HdfsFile(Boolean isDir,String authority, String owner, Date date, Long size, String path) {
-        this.isDir=isDir;
+    public HdfsFile(Boolean isDir, String authority, String owner, Date date, Long size, String path) {
+        this.isDir = isDir;
         this.authority = authority;
         this.owner = owner;
-        this.time= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         this.size = size;
         this.path = path;
     }

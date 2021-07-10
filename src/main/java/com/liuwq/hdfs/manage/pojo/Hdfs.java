@@ -10,14 +10,9 @@ public class Hdfs {
     private final Configuration configuration;
     private FileSystem fileSystem;
 
-    public Hdfs(String uri) {
+    public Hdfs(String uri) throws Exception{
         configuration = new Configuration();
-        try {
-            fileSystem = FileSystem.get(URI.create(uri), configuration,"root");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fileSystem = FileSystem.get(URI.create(uri), configuration,"root");
         this.uri = uri;
     }
 

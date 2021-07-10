@@ -9,8 +9,9 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.ArrayList;
 
 @RestController
@@ -24,17 +25,9 @@ public class HdfsController {
     }
 
     @GetMapping("/list")
-    public ResultBody list() throws Exception {
-        ArrayList<HdfsFile> arrayList = new ArrayList<>();
+    public ResultBody list(@RequestParam("uri") String uri) throws Exception {
         FileSystem fileSystem = hdfs.getFileSystem();
-        FileStatus[] fileStatus = fileSystem.listStatus(new Path(hdfs.getUri()));
-        for (int i = 0; i < fileStatus.length; i++) {
-            if (fileStatus[i].isFile()) {
-                arrayList.add(FileFactory.fileFomater(fileStatus[i]));
-            } else if (fileStatus[i].isDirectory()) {
-                arrayList.add(FileFactory.fileFomater(fileStatus[i]));
-            }
-        }
-        return ResultBody.seccess(arrayList);
+        FileStatus[] fileStatus = fileSystem.listStatus(new Path(uri));
+        return ResultBody.seccess(FileFactory.fomater(fileStatus));
     }
 }

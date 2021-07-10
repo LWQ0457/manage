@@ -10,9 +10,9 @@ public class MyConfig {
     @Value("${hadoop.uri}")
     private String uri;
     @Bean
-    public Hdfs hdfs(){
-        Hdfs myhdfs=new Hdfs(uri);
-        return myhdfs;
+    public Hdfs hdfs() throws Exception{
+
+        return new Hdfs(uri);
     }
 
 }
