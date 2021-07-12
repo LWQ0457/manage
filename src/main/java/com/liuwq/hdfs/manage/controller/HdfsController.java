@@ -10,9 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+
 
 @RestController
-@CrossOrigin
 public class HdfsController {
     private final static Logger logger = LoggerFactory.getLogger(HdfsController.class);
     @Autowired
@@ -26,7 +27,7 @@ public class HdfsController {
     @GetMapping("/list")
     public ResultBody list(@RequestParam("path") String path) throws Exception {
         ResultBody resultBody;
-        Object data;
+        Object data=null;
         data = hdfsService.getFileInfoByPath(path);
         return ResultBody.success(data);
     }
@@ -41,20 +42,22 @@ public class HdfsController {
     }
 
     @GetMapping("/download")
-    public ResultBody download(@RequestParam("path") String path,
+    public void download(@RequestParam("path") String path,
                                HttpServletResponse response) throws Exception {
-        if (path.charAt(0) != '/') {
-            path = '/' + path;
-        }
-        response.reset();
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + path.substring(1) + "\"");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + path + "\"");
         response.addHeader("Content-Length", "" + (hdfsService.getFileInfoByPath(path)).get(0).getSize());
-        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=UTF-8");
+        response.addHeader("Pragma", "no-cache");
+        response.addHeader("Expires", "0");
+        response.addHeader("Last-Modified", new Date().toString());
+        response.addHeader("ETag", String.valueOf(System.currentTimeMillis()));
         ServletOutputStream outputStream = response.getOutputStream();
-        if (hdfsService.downloadFile(path, outputStream)) {
-            return ResultBody.success(null);
-        }
-        return ResultBody.error_noFind();
+        hdfsService.downloadFile(path, outputStream);
+//        if (hdfsService.downloadFile(path, outputStream)) {
+//            return ResultBody.success(null);
+//        }
+//        return ResultBody.error_noFind();
     }
 
     @GetMapping("/delete")

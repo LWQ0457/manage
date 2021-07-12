@@ -22,5 +22,5 @@ public interface HdfsService {
     long getDirSize(String path) throws Exception;
 
     boolean renameFile(String oldPath,String newPath) throws Exception;
-    boolean exist(Path path) throws IOException;
+    boolean exist(String path) throws IOException;
 }

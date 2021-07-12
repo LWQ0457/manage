@@ -12,10 +12,11 @@ public class HdfsFile {
     private Long size;
     private String fileName;
     private String type;
+    private String path;
     public HdfsFile() {
     }
 
-    public HdfsFile(Boolean isDir, String authority, String owner, Date date, Long size, String fileName,String type) {
+    public HdfsFile(Boolean isDir, String authority, String owner, Date date, Long size, String fileName,String type,String path) {
         this.isDir = isDir;
         this.authority = authority;
         this.owner = owner;
@@ -23,6 +24,15 @@ public class HdfsFile {
         this.size = size;
         this.fileName = fileName;
         this.type=type;
+        this.path=path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getFileName() {

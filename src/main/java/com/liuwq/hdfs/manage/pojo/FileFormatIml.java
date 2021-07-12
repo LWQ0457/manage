@@ -24,7 +24,7 @@ public class FileFormatIml implements FileFormat {
             type=fileStatus.getPath().toString().substring(fileStatus.getPath().toString().lastIndexOf(".")+1);
         }
         return new HdfsFile(fileStatus.isDirectory(), fileStatus.getPermission().toString(), fileStatus.getOwner(),
-                new Date(fileStatus.getModificationTime()), fileStatus.getLen(),filename,type);
+                new Date(fileStatus.getModificationTime()), fileStatus.getLen(),filename,type,fileStatus.getPath().toString());
     }
 
     public static ArrayList<HdfsFile> directoryFormat(FileStatus[] directory) {
