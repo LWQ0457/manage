@@ -10,18 +10,35 @@ public class HdfsFile {
     private String owner;
     private String time;
     private Long size;
-    private String path;
-
+    private String fileName;
+    private String type;
     public HdfsFile() {
     }
 
-    public HdfsFile(Boolean isDir, String authority, String owner, Date date, Long size, String path) {
+    public HdfsFile(Boolean isDir, String authority, String owner, Date date, Long size, String fileName,String type) {
         this.isDir = isDir;
         this.authority = authority;
         this.owner = owner;
         this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
         this.size = size;
-        this.path = path;
+        this.fileName = fileName;
+        this.type=type;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Boolean getDir() {
@@ -64,11 +81,4 @@ public class HdfsFile {
         this.size = size;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 }

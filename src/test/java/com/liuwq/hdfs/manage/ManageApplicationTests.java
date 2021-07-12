@@ -8,6 +8,8 @@ class ManageApplicationTests {
 
     @Test
     void contextLoads() {
+        String path="/";
+        System.out.println(path.substring(0,path.lastIndexOf("/")+1));
     }
 
 }

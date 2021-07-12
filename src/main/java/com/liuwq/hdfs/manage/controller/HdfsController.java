@@ -12,6 +12,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin
 public class HdfsController {
     private final static Logger logger = LoggerFactory.getLogger(HdfsController.class);
     @Autowired
@@ -34,7 +35,7 @@ public class HdfsController {
     public ResultBody upload(@RequestParam("path") String path,
                              @RequestPart("file") MultipartFile file) throws Exception {
         if (hdfsService.uploadFile(path + file.getOriginalFilename(), file.getInputStream())) {
-            return ResultBody.success(null);
+            return ResultBody.success(path.substring(0,path.lastIndexOf("/")+1));
         }
         return ResultBody.error("-1", "目标路径下存在同名文件");
     }
@@ -59,7 +60,7 @@ public class HdfsController {
     @GetMapping("/delete")
     public ResultBody deleteFile(@RequestParam("path") String path) throws Exception {
         if (hdfsService.deleteFile(path)) {
-            return ResultBody.success(null);
+            return ResultBody.success(hdfsService.getFileInfoByPath(path.substring(0,path.lastIndexOf("/")+1)));
         } else {
             return ResultBody.error_noFind();
         }
@@ -68,7 +69,7 @@ public class HdfsController {
     @GetMapping("add")
     public ResultBody addFile(@RequestParam("path") String path) throws Exception {
         if (hdfsService.creatNewFile(path))
-            return ResultBody.success(null);
+            return ResultBody.success(hdfsService.getFileInfoByPath(path.substring(0,path.lastIndexOf("/")+1)));
         else {
             return ResultBody.error_noFind();
         }
